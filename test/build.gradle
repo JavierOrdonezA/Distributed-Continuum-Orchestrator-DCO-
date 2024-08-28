@@ -1,0 +1,93 @@
+// Apply the Java plugin to add support for Java
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.palantir.docker' version '0.25.0'
+    id 'checkstyle' // Plugin para Checkstyle
+    id 'pmd'        // Plugin para PMD
+}
+
+// Set the group and version for your project
+group = 'com.example'
+version = '1.0.0'
+sourceCompatibility = '11'
+
+// Define the main class for the application
+mainClassName = 'com.example.Main'
+
+// Repositories for dependencies
+repositories {
+    mavenCentral()
+}
+
+// Define the dependencies required for the project
+dependencies {
+    // ---- Core Dependencies ----
+    implementation 'org.springframework:spring-core:5.3.21'
+    implementation 'org.springframework:spring-context:5.3.21'
+
+    // ---- Jackson for JSON parsing ----
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+
+    // ---- JUnit 5 for Unit Testing ----
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+
+    // ---- Mocking Framework for Tests ----
+    testImplementation 'org.mockito:mockito-core:5.4.0'
+    
+    // ---- Logging Framework ----
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.0'
+    implementation 'org.apache.logging.log4j:log4j-api:2.17.0'
+
+}
+
+// Configure the test task to use JUnit 5
+test {
+    useJUnitPlatform()
+}
+
+// Task to build a Docker image using the Docker plugin
+docker {
+    name "${project.group}/${project.name}:${project.version}"
+    files 'build/libs/${project.name}-${project.version}.jar'
+    buildArgs(['JAR_FILE': "build/libs/${project.name}-${project.version}.jar"])
+    dockerfile file('Dockerfile')
+}
+
+// Task to create a fat JAR file (includes all dependencies)
+jar {
+    manifest {
+        attributes(
+            'Main-Class': mainClassName
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    archiveBaseName.set("${project.name}")
+    archiveVersion.set("${project.version}")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Configure Checkstyle
+checkstyle {
+    toolVersion = '10.2'  // Especificar la versión de Checkstyle
+    configFile = file('ci/checkstyle.xml')  // Ubicación del archivo de configuración de Checkstyle
+}
+
+// Configure PMD
+pmd {
+    toolVersion = '6.42.0'  // Especificar la versión de PMD
+    ruleSets = []  // No usar los conjuntos de reglas predeterminados
+    ruleSetFiles = files('ci/pmd.xml')  // Ubicación del archivo de configuración de PMD
+}
+
+// Define additional tasks as needed
+task runLocal(type: Exec) {
+    commandLine 'sh', 'ci/run_local.sh'
+}

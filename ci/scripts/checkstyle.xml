@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.sourceforge.io/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+    <module name="TreeWalker">
+        <module name="WhitespaceAfter"/>
+        <module name="WhitespaceAround"/>
+        <module name="GenericWhitespace"/>
+        <module name="EmptyBlock"/>
+        <module name="JavadocStyle"/>
+        <module name="AvoidStarImport"/> <!-- Colocado dentro de TreeWalker -->
+        <module name="ImportOrder"/>
+        <!-- Puedes agregar más módulos de análisis de árbol aquí -->
+    </module>
+    <!-- Módulos de nivel superior -->
+    <module name="LineLength">
+        <property name="max" value="100"/>
+    </module>
+    <module name="FileLength">
+        <property name="max" value="2000"/>
+    </module>
+</module>

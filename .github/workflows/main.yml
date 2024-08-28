@@ -1,0 +1,91 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/*"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  code_formatting:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: "11"
+          distribution: "temurin"
+
+      - name: Apply code formatting
+        run: |
+          find . -name "*.java" -not -path "./.sandbox/*" -exec java -jar lib/google-java-format-1.23.0-all-deps.jar --replace {} \;
+
+  code_validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: "11"
+          distribution: "temurin"
+
+      - name: Download and Install Checkstyle
+        run: |
+          wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.10.0/checkstyle-10.10.0-all.jar -O lib/checkstyle.jar
+
+      - name: Validate code with Checkstyle
+        run: |
+          java -jar lib/checkstyle.jar -c ci/scripts/checkstyle.xml src/main/java/
+
+  run_linting:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: "11"
+          distribution: "temurin"
+
+      - name: Download and Install PMD
+        run: |
+          wget https://github.com/pmd/pmd/releases/download/pmd_releases/6.42.0/pmd-bin-6.42.0.zip -O pmd-bin.zip
+          mkdir -p lib/pmd-bin
+          unzip pmd-bin.zip -d lib/pmd-bin
+          chmod +x lib/pmd-bin/pmd-bin-6.42.0/bin/pmd
+
+      - name: Run PMD Analysis
+        run: |
+          lib/pmd-bin/pmd-bin-6.42.0/bin/pmd -d src/main/java/ -R ci/scripts/pmd.xml -f text
+
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: "11"
+          distribution: "temurin"
+
+      - name: Build project and run tests
+        run: |
+          ./gradlew build
+          ./gradlew test
