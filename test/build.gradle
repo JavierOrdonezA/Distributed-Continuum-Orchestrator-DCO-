@@ -37,7 +37,7 @@ dependencies {
 
     // ---- Mocking Framework for Tests ----
     testImplementation 'org.mockito:mockito-core:5.4.0'
-    
+
     // ---- Logging Framework ----
     implementation 'ch.qos.logback:logback-classic:1.4.11'
     implementation 'org.slf4j:slf4j-api:2.0.7'

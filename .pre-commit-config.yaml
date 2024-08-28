@@ -1,0 +1,35 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+
+  - repo: local
+    hooks:
+      - id: google-java-format
+        name: google-java-format
+        entry: java -jar lib/google-java-format-1.23.0-all-deps.jar --replace
+        language: system
+        files: \.java$
+
+      - id: checkstyle
+        name: checkstyle
+        entry: java -jar lib/checkstyle.jar -c ci/scripts/checkstyle.xml
+        language: system
+        files: \.java$
+
+      - id: pmd
+        name: pmd
+        entry: ./pmd-bin-6.42.0/bin/run.sh
+        args:
+          - pmd
+          - -d
+          - src/main/java
+          - -R
+          - ci/scripts/pmd.xml
+          - -f
+          - text
+        language: system
+        pass_filenames: false

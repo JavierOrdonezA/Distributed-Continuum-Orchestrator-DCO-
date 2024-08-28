@@ -40,9 +40,11 @@ jobs:
           java-version: "11"
           distribution: "temurin"
 
+      - name: Create lib directory
+        run: mkdir -p lib
+
       - name: Download and Install Checkstyle
-        run: |
-          wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.10.0/checkstyle-10.10.0-all.jar -O lib/checkstyle.jar
+        run: wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.10.0/checkstyle-10.10.0-all.jar -O lib/checkstyle.jar
 
       - name: Validate code with Checkstyle
         run: |
@@ -66,11 +68,11 @@ jobs:
           wget https://github.com/pmd/pmd/releases/download/pmd_releases/6.42.0/pmd-bin-6.42.0.zip -O pmd-bin.zip
           mkdir -p lib/pmd-bin
           unzip pmd-bin.zip -d lib/pmd-bin
-          chmod +x lib/pmd-bin/pmd-bin-6.42.0/bin/pmd
+          chmod +x lib/pmd-bin/pmd-bin-6.42.0/bin/run.sh
 
       - name: Run PMD Analysis
         run: |
-          lib/pmd-bin/pmd-bin-6.42.0/bin/pmd -d src/main/java/ -R ci/scripts/pmd.xml -f text
+          lib/pmd-bin/pmd-bin-6.42.0/bin/run.sh pmd -d src/main/java/ -R ci/scripts/pmd.xml -f text
 
   tests:
     runs-on: ubuntu-latest
@@ -84,6 +86,9 @@ jobs:
         with:
           java-version: "11"
           distribution: "temurin"
+
+      - name: Ensure gradlew is executable
+        run: chmod +x ./gradlew
 
       - name: Build project and run tests
         run: |

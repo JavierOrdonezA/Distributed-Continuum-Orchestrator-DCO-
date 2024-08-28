@@ -1,24 +1,114 @@
-# Compiled class file
+# Java and Maven
+target/
 *.class
-
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
 *.jar
 *.war
-*.nar
 *.ear
-*.zip
-*.tar.gz
-*.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# IntelliJ IDEA project files
+.idea/
+*.iml
+*.iws
+out/
+
+# VS Code files
+.vscode/
+.sandbox/
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Eclipse project files
+.project
+.classpath
+.csettings/
+.settings/
+
+# NetBeans project files
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Gradle files
+.gradle/
+build/
+
+# Distribution / packaging
+dist/
+build/
+
+# Maven specific
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Checkstyle reports
+checkstyle-report.xml
+
+# PMD reports
+pmd-report.xml
+
+# Code analysis tools
+.analyze/
+
+# Java test reports
+test-output/
+test-results/
+
+# IDE config files
+*.launch
+*.ipr
+*.iws
+.idea/
+
+# Byte-compiled files
+*.class
+
+# Google Java Format
+lib/google-java-format-*.jar
+
+# Checkstyle jar
+lib/checkstyle.jar
+
+# Ignore class files
+**/bin/
+**/target/
+**/*.class
+
+# Ignore libraries and tools
+lib/
+
+# Ignore Eclipse and VS Code specific files
+.classpath
+.project
+.settings/
+.vscode/
+
+# Ignore Maven files
+mvnw
+mvnw.cmd
+
+# Ignore Gradle files
+gradlew
+gradlew.bat
+.gradle/
+build/
+
+# PMD binaries and other tools
+lib/pmd-bin-6.42.0/
+
+# Ignore GitHub Actions workflows
+.github/workflows/
+
+# Ignore custom directories
+.sandbox/

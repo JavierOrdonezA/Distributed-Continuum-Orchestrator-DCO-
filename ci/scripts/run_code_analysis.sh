@@ -57,13 +57,14 @@ check_checkstyle_unused_imports() {
 # Function to run PMD
 run_pmd_analysis() {
     info "Running PMD analysis"
-    # Use the correct path to the PMD executable
-    if ! pmd-bin-6.42.0/bin/run.sh pmd -d "$SOURCE_DIR" -R ci/scripts/pmd.xml -f text; then
+    # Asegúrate de que la ruta sea la correcta, relativa a tu ubicación actual
+    if ! ./pmd-bin-6.42.0/bin/run.sh pmd -d "$SOURCE_DIR" -R ci/scripts/pmd.xml -f text; then
         error "PMD did not pass"
         exit 2
     fi
     info "PMD analysis completed!"
 }
+
 
 # Main script
 check_google_java_format
