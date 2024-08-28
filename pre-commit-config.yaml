@@ -1,0 +1,11 @@
+repos:
+  - repo: https://github.com/diffplug/spotless
+    rev: "10.2.3" # Cambia esto por la última versión
+    hooks:
+      - id: spotless # Este es un ejemplo para formatear código Java con Spotless
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
