@@ -81,17 +81,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: "11"
-          distribution: "temurin"
+      - name: Ensure gradlew is executable
+        run: chmod +x ./gradlew
 
       - name: List root directory contents
         run: ls -alh
-
-      - name: Ensure gradlew is executable
-        run: chmod +x ./gradlew
 
       - name: Build project and run tests
         run: |
