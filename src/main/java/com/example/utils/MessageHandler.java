@@ -4,7 +4,7 @@ import java.io.Console;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MessageHandler {
+public class MessageHandler { // NOPMD
 
   // Logger instance
   private static final Logger LOGGER = LogManager.getLogger(MessageHandler.class);
@@ -20,8 +20,7 @@ public class MessageHandler {
 
   // Method to print messages with specified color
   private static void printMessage(final String color, final String type, final String message) {
-    final String formattedMessage =
-        String.format("%s%s[%s]%s %s", BOLD, color, type, RESET, message);
+    final String formattedMessage = String.format("%s%s[%s]%s %s", BOLD, color, type, RESET, message);
     if (CONSOLE == null) {
       LOGGER.info(formattedMessage);
     } else {
@@ -43,6 +42,6 @@ public class MessageHandler {
 
   public static void errorExit(final String message) {
     error(message);
-    System.exit(1);
+    System.exit(1); // NOPMD
   }
 }

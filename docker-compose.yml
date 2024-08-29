@@ -1,46 +1,52 @@
-version: '3.8'
+version: '3.0'
 
 x-defaults: &defaults
   build: &build_defaults
     context: .
     dockerfile: Dockerfile  # Asegúrate de que este sea el Dockerfile correcto para tu aplicación
     args: &args_defaults
-      INSTALL_LOC: /app  # Suposición sobre la ruta de instalación de tu aplicación
+      INSTALL_LOC: /app  # Ruta de instalación de tu aplicación
   ports:
-    - "8080:8080"  # Puedes ajustar el puerto según tus necesidades
+    - "8080:8080"  # Ajusta el puerto según sea necesario
   env_file:
     - .env  # Puedes definir variables de entorno necesarias para tu aplicación
 
 services:
-  state_machine_1:
+  gate_state_machine:
     <<: *defaults
     build:
       <<: *build_defaults
       args:
         <<: *args_defaults
+        STATE_MACHINE_TYPE: "Gate"  # Tipo de máquina de estado
     environment:
-      - NODE_NAME=StateMachine1  # Variable para identificar el nodo
+      - NODE_NAME=GateStateMachine  # Variable para identificar el nodo
+      - STATE_MACHINE_TYPE=Gate  # Especifica el tipo de máquina de estado
     profiles:
-      - state_machine_1
+      - gate_state_machine
 
-  state_machine_2:
+  light_state_machine:
     <<: *defaults
     build:
       <<: *build_defaults
       args:
         <<: *args_defaults
+        STATE_MACHINE_TYPE: "Light"  # Tipo de máquina de estado
     environment:
-      - NODE_NAME=StateMachine2  # Variable para identificar el nodo
+      - NODE_NAME=LightStateMachine  # Variable para identificar el nodo
+      - STATE_MACHINE_TYPE=Light  # Especifica el tipo de máquina de estado
     profiles:
-      - state_machine_2
+      - light_state_machine
 
-  state_machine_3:
+  controller_state_machine:
     <<: *defaults
     build:
       <<: *build_defaults
       args:
         <<: *args_defaults
+        STATE_MACHINE_TYPE: "Controller"  # Tipo de máquina de estado
     environment:
-      - NODE_NAME=StateMachine3  # Variable para identificar el nodo
+      - NODE_NAME=ControllerStateMachine  # Variable para identificar el nodo
+      - STATE_MACHINE_TYPE=Controller  # Especifica el tipo de máquina de estado
     profiles:
-      - state_machine_3
+      - controller_state_machine
