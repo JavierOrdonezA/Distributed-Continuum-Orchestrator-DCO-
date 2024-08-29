@@ -1,58 +1,41 @@
-version: '3.0'
-
-x-defaults: &defaults
-  build: &build_defaults
-    context: .
-    dockerfile: Dockerfile
-    args: &args_defaults
-      INSTALL_LOC: /app
-  ports:
-    - "8080:8080"
-  env_file:
-    - .env
+version: '3.9'
 
 services:
   gate_state_machine:
-    <<: *defaults
     build:
-      <<: *build_defaults
+      context: .
+      dockerfile: Dockerfile
       args:
-        <<: *args_defaults
+        INSTALL_LOC: /app
         STATE_MACHINE_TYPE: "Gate"
     environment:
       - NODE_NAME=GateStateMachine
       - STATE_MACHINE_TYPE=Gate
     ports:
-      - "8081:8080"
-    profiles:
-      - gate_state_machine
+      - "8080:8080"
 
   light_state_machine:
-    <<: *defaults
     build:
-      <<: *build_defaults
+      context: .
+      dockerfile: Dockerfile
       args:
-        <<: *args_defaults
+        INSTALL_LOC: /app
         STATE_MACHINE_TYPE: "Light"
     environment:
       - NODE_NAME=LightStateMachine
       - STATE_MACHINE_TYPE=Light
     ports:
-      - "8082:8080"
-    profiles:
-      - light_state_machine
+      - "8081:8080"
 
   controller_state_machine:
-    <<: *defaults
     build:
-      <<: *build_defaults
+      context: .
+      dockerfile: Dockerfile
       args:
-        <<: *args_defaults
+        INSTALL_LOC: /app
         STATE_MACHINE_TYPE: "Controller"
     environment:
       - NODE_NAME=ControllerStateMachine
       - STATE_MACHINE_TYPE=Controller
     ports:
-      - "8083:8080"
-    profiles:
-      - controller_state_machine
+      - "8082:8080"
