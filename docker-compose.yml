@@ -1,0 +1,46 @@
+version: '3.8'
+
+x-defaults: &defaults
+  build: &build_defaults
+    context: .
+    dockerfile: Dockerfile  # Asegúrate de que este sea el Dockerfile correcto para tu aplicación
+    args: &args_defaults
+      INSTALL_LOC: /app  # Suposición sobre la ruta de instalación de tu aplicación
+  ports:
+    - "8080:8080"  # Puedes ajustar el puerto según tus necesidades
+  env_file:
+    - .env  # Puedes definir variables de entorno necesarias para tu aplicación
+
+services:
+  state_machine_1:
+    <<: *defaults
+    build:
+      <<: *build_defaults
+      args:
+        <<: *args_defaults
+    environment:
+      - NODE_NAME=StateMachine1  # Variable para identificar el nodo
+    profiles:
+      - state_machine_1
+
+  state_machine_2:
+    <<: *defaults
+    build:
+      <<: *build_defaults
+      args:
+        <<: *args_defaults
+    environment:
+      - NODE_NAME=StateMachine2  # Variable para identificar el nodo
+    profiles:
+      - state_machine_2
+
+  state_machine_3:
+    <<: *defaults
+    build:
+      <<: *build_defaults
+      args:
+        <<: *args_defaults
+    environment:
+      - NODE_NAME=StateMachine3  # Variable para identificar el nodo
+    profiles:
+      - state_machine_3

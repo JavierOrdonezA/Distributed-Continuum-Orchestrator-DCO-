@@ -1,0 +1,8 @@
+# Read more: https://docs.docker.com/build/building/context/
+
+# Exclude all tests in any immediate subdirectory of the root,
+# e.g., within src. For now we don't have tests there.
+*/tests*
+# Exclude all tests from any directory four levels from root, follow
+# the structure to ignore files using docker
+*/*/*/*/tests*
