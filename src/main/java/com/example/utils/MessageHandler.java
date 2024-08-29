@@ -20,7 +20,8 @@ public class MessageHandler { // NOPMD
 
   // Method to print messages with specified color
   private static void printMessage(final String color, final String type, final String message) {
-    final String formattedMessage = String.format("%s%s[%s]%s %s", BOLD, color, type, RESET, message);
+    final String formattedMessage =
+        String.format("%s%s[%s]%s %s", BOLD, color, type, RESET, message);
     if (CONSOLE == null) {
       LOGGER.info(formattedMessage);
     } else {

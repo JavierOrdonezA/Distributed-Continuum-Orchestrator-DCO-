@@ -29,7 +29,7 @@ COPY ./pmd-bin-6.42.0 $INSTALL_LOC/pmd-bin-6.42.0
 WORKDIR $INSTALL_LOC
 RUN chmod +x gradlew
 
-# Construir el proyecto con opciones de depuración para diagnostico de errores
+# Construir el proyecto con opciones de depuración para diagnóstico de errores
 RUN ./gradlew build --no-daemon --info
 
 # Segunda etapa: Crear la imagen limpia para ejecución
@@ -62,7 +62,7 @@ RUN chmod +x /entrypoint.sh
 EXPOSE $HOST_PORT
 
 # Comando de entrada
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT ["/entrypoint.sh"]
 
 # Comando por defecto para ejecutar la aplicación
 CMD ["java", "-jar", "$INSTALL_LOC/your-app.jar", "--stateMachineType=$STATE_MACHINE_TYPE"]

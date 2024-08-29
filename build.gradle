@@ -74,8 +74,8 @@ jar {
 }
 
 //checkstyle {
-//    toolVersion = '10.2'  
-//    configFile = file('ci/scripts/checkstyle.xml') 
+//    toolVersion = '10.2'
+//    configFile = file('ci/scripts/checkstyle.xml')
 //}
 
 

@@ -3,13 +3,13 @@ version: '3.0'
 x-defaults: &defaults
   build: &build_defaults
     context: .
-    dockerfile: Dockerfile  # Asegúrate de que este sea el Dockerfile correcto para tu aplicación
+    dockerfile: Dockerfile
     args: &args_defaults
-      INSTALL_LOC: /app  # Ruta de instalación de tu aplicación
+      INSTALL_LOC: /app
   ports:
-    - "8080:8080"  # Ajusta el puerto según sea necesario
+    - "8080:8080"
   env_file:
-    - .env  # Puedes definir variables de entorno necesarias para tu aplicación
+    - .env
 
 services:
   gate_state_machine:
@@ -18,10 +18,12 @@ services:
       <<: *build_defaults
       args:
         <<: *args_defaults
-        STATE_MACHINE_TYPE: "Gate"  # Tipo de máquina de estado
+        STATE_MACHINE_TYPE: "Gate"
     environment:
-      - NODE_NAME=GateStateMachine  # Variable para identificar el nodo
-      - STATE_MACHINE_TYPE=Gate  # Especifica el tipo de máquina de estado
+      - NODE_NAME=GateStateMachine
+      - STATE_MACHINE_TYPE=Gate
+    ports:
+      - "8081:8080"
     profiles:
       - gate_state_machine
 
@@ -31,10 +33,12 @@ services:
       <<: *build_defaults
       args:
         <<: *args_defaults
-        STATE_MACHINE_TYPE: "Light"  # Tipo de máquina de estado
+        STATE_MACHINE_TYPE: "Light"
     environment:
-      - NODE_NAME=LightStateMachine  # Variable para identificar el nodo
-      - STATE_MACHINE_TYPE=Light  # Especifica el tipo de máquina de estado
+      - NODE_NAME=LightStateMachine
+      - STATE_MACHINE_TYPE=Light
+    ports:
+      - "8082:8080"
     profiles:
       - light_state_machine
 
@@ -44,9 +48,11 @@ services:
       <<: *build_defaults
       args:
         <<: *args_defaults
-        STATE_MACHINE_TYPE: "Controller"  # Tipo de máquina de estado
+        STATE_MACHINE_TYPE: "Controller"
     environment:
-      - NODE_NAME=ControllerStateMachine  # Variable para identificar el nodo
-      - STATE_MACHINE_TYPE=Controller  # Especifica el tipo de máquina de estado
+      - NODE_NAME=ControllerStateMachine
+      - STATE_MACHINE_TYPE=Controller
+    ports:
+      - "8083:8080"
     profiles:
       - controller_state_machine
