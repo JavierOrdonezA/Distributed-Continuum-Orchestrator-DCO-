@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to the **Distributed Continuum Orchestrator (DCO)** project repository. This project is part of the PhD application assignment for the Distributed and Parallel Systems Group at the University of Innsbruck. The goal of this project is to design and implement a distributed system that leverages state machine models to manage a complex application scenario in a highly available and fault-tolerant environment.
+Welcome to the **Distributed Continuum Orchestrator (DCO)** project repository. This project is part of the PhD application assignment for the Distributed and Parallel Systems Group at the University of Innsbruck.  The goal of this project is to design and implement a distributed system that leverages state machine models to manage a complex application scenario in a highly available and fault-tolerant environment.
 
 ### Project Structure
 
