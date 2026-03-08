@@ -1,0 +1,78 @@
+{
+  "machines": [
+    {
+      "machineId": "controller",
+      "initialState": "away",
+      "states": [
+        { "name": "away", "entryActions": [] },
+        {
+          "name": "approach",
+          "entryActions": [
+            { "type": "RAISE_EVENT", "target": "approaching" }
+          ]
+        },
+        { "name": "close", "entryActions": [] },
+        { "name": "present", "entryActions": [] },
+        {
+          "name": "leaving",
+          "entryActions": [
+            { "type": "RAISE_EVENT", "target": "leaving" }
+          ]
+        },
+        { "name": "left", "entryActions": [] }
+      ],
+      "transitions": [
+        { "from": "away", "event": "seen", "to": "approach" },
+        { "from": "approach", "event": "¬seen", "to": "close" },
+        { "from": "close", "event": "seen", "to": "present" },
+        { "from": "present", "event": "¬seen", "to": "leaving" },
+        { "from": "leaving", "event": "seen", "to": "left" },
+        { "from": "left", "event": "¬seen", "to": "away" }
+      ]
+    },
+    {
+      "machineId": "gate",
+      "initialState": "up",
+      "states": [
+        {
+          "name": "up",
+          "entryActions": [
+            { "type": "CALL_FUNCTION", "target": "gate_up" }
+          ]
+        },
+        {
+          "name": "down",
+          "entryActions": [
+            { "type": "CALL_FUNCTION", "target": "gate_down" }
+          ]
+        }
+      ],
+      "transitions": [
+        { "from": "up", "event": "approaching", "to": "down" },
+        { "from": "down", "event": "leaving", "to": "up" }
+      ]
+    },
+    {
+      "machineId": "light",
+      "initialState": "off",
+      "states": [
+        {
+          "name": "off",
+          "entryActions": [
+            { "type": "CALL_FUNCTION", "target": "light_off" }
+          ]
+        },
+        {
+          "name": "on",
+          "entryActions": [
+            { "type": "CALL_FUNCTION", "target": "light_on" }
+          ]
+        }
+      ],
+      "transitions": [
+        { "from": "off", "event": "approaching", "to": "on" },
+        { "from": "on", "event": "leaving", "to": "off" }
+      ]
+    }
+  ]
+}

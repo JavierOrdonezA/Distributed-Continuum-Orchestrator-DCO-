@@ -1,116 +1,13 @@
-# Java and Maven
-target/
-*.class
-*.jar
-*.war
-*.ear
-
-# IntelliJ IDEA project files
-.idea/
-*.iml
-*.iws
+.gradle/
+build/
 out/
-
-# VS Code files
-.vscode/
-.sandbox/
-
-# Log files
+*.class
 *.log
 
-# Temporary files
-*.tmp
-*.temp
-
-# Eclipse project files
-.project
-.classpath
-.csettings/
-.settings/
-
-# NetBeans project files
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-
-# Gradle files
-.gradle/
-build/
-gradle/wrapper/  # Ignora la carpeta gradle/wrapper
-
-# Distribution / packaging
-dist/
-build/
-
-# Maven specific
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-
-# Checkstyle reports
-checkstyle-report.xml
-
-# PMD reports
-pmd-report.xml
-
-# Code analysis tools
-.analyze/
-
-# Java test reports
-test-output/
-test-results/
-
-# IDE config files
-*.launch
-*.ipr
-*.iws
 .idea/
-
-# Byte-compiled files
-*.class
-
-# Google Java Format
-lib/google-java-format-*.jar
-
-# Checkstyle jar
-lib/checkstyle.jar
-
-# Ignore class files
-**/bin/
-**/target/
-**/*.class
-
-# Ignore libraries and tools
-lib/
-lib/pmd-bin-6.42.0/  # Ignora la carpeta lib/pmd-bin-6.42.0
-
-# Ignore Eclipse and VS Code specific files
-.classpath
-.project
-.settings/
 .vscode/
 
-# Ignore Maven files
-mvnw
-mvnw.cmd
-
-# Ignore Gradle files
-gradlew
-gradlew.bat
-.gradle/
-build/
-
-# PMD binaries and other tools
-lib/pmd-bin-6.42.0/
-
-# Ignore GitHub Actions workflows
-.github/workflows/
-
-# Ignore custom directories
+tmp/
 .sandbox/
+
+.DS_Store

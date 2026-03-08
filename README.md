@@ -1,119 +1,85 @@
-# Distributed-Continuum-Orchestrator-DCO
+# Distributed Continuum Orchestrator (DCO)
 
-## Overview
+This repository implements the railway-crossing scenario from `DPS_CSM_Application_Test_v2.pdf` using a model-driven finite state machine runtime.
 
-Welcome to the **Distributed Continuum Orchestrator (DCO)** project repository. This project is part of the PhD application assignment for the Distributed and Parallel Systems Group at the University of Innsbruck.  The goal of this project is to design and implement a distributed system that leverages state machine models to manage a complex application scenario in a highly available and fault-tolerant environment.
+## What is implemented
 
-### Project Structure
+- Generic model for states, events, transitions, and entry actions.
+- Runtime engine that executes transitions and Moore semantics (actions run when entering states).
+- Rail crossing application made of three state machines:
+  - `controller`
+  - `gate`
+  - `light`
+- External application description loaded from `src/main/resources/fsm/rail_crossing.json`.
+- Distributed event exchange through HTTP (`/event`).
+- Unit and integration tests that verify the PDF transition logic.
 
-This repository is organized into the following key sections:
+## Controller transitions (aligned with PDF)
 
-- **src/**: Contains the Java source code for the implementation of the distributed state machines and the runtime environment.
-- **docs/**: Includes detailed documentation about the project, including the design choices, theoretical background, and how-to guides.
-- **diagrams/**: Contains state transition diagrams and other visual aids that represent the state machines and their interactions.
-- **tests/**: Contains unit tests and integration tests to ensure the correctness and reliability of the implementation.
-- **scripts/**: Contains scripts for setting up the Docker environment and orchestrating the distributed application across multiple nodes.
+- `away --seen--> approach`
+- `approach --¬seen--> close`
+- `close --seen--> present`
+- `present --¬seen--> leaving`
+- `leaving --seen--> left`
+- `left --¬seen--> away`
 
-### Task 1: Theoretical Exploration
+Entry actions:
 
-This task involves a detailed theoretical analysis of several key concepts in distributed systems, including:
+- Entering `approach` raises `approaching`.
+- Entering `leaving` raises `leaving`.
 
-1. **Concurrency and Parallelism in Programming Languages**:
+## Project structure
 
-   - Analysis of how languages like Java and Python handle concurrency and parallelism.
-   - Discussion on the impact of these features on the design and implementation of distributed systems.
+- `src/main/java/com/example/dco/model`: model abstractions.
+- `src/main/java/com/example/dco/runtime`: FSM engine and execution support.
+- `src/main/java/com/example/dco/application`: rail crossing FSM definitions.
+- `src/main/java/com/example/dco/adapters/http`: HTTP adapter for distributed communication.
+- `src/main/java/com/example/dco/functions`: callable functions for Moore actions.
+- `src/test/java/com/example/dco`: tests.
 
-2. **Leader Election Algorithms**:
+## Run locally
 
-   - Description and analysis of an efficient leader election algorithm.
-   - Examination of its time and space complexity, and its effectiveness under different conditions.
+Requirements:
 
-3. **High Availability and Fault Tolerance Best Practices**:
+- Java 17+
+- `curl` and `unzip` (the included `gradlew` downloads Gradle automatically)
 
-   - Exploration of best practices for achieving high availability and fault tolerance.
-   - Examples of strategies and their impact on system reliability.
+Commands:
 
-4. **Communication Strategy for Isolated Networks**:
+```bash
+./gradlew clean test
+./gradlew run --args='--role=controller --auto-simulate=true --exit-after-simulation=true --peers=http://localhost:8080/event,http://localhost:8081/event'
+```
 
-   - Design of a secure communication strategy between isolated private networks using proxies, VPNs, or relay services.
+## Run distributed with Docker Compose
 
-5. **Understanding of the Computing Continuum**:
-   - In-depth description of the Cloud-Edge-IoT continuum.
-   - Analysis of the purpose of each layer and examples of common use cases.
+```bash
+docker compose up --build
+```
 
-### Task 2: Practical Implementation
+Health/state checks:
 
-This task focuses on the design and implementation of a distributed state machine runtime environment and the deployment of a real-world application scenario. The project is divided into the following parts:
+```bash
+curl http://localhost:8080/state
+curl http://localhost:8081/state
+curl http://localhost:8082/state
+```
 
-#### Part 1: State Machine Model
+Send manual sensor events to controller:
 
-- **Objective**: Design a versatile state machine model capable of representing arbitrary state machines.
-- **Details**:
-  - The model should support various components such as states, events, actions, transitions, and functions.
-  - The design should allow serialization for future use in the runtime environment.
-- **Documentation**: Detailed explanation of the model, design choices, and potential extensions for enhanced functionality.
+```bash
+curl -X POST http://localhost:8082/event -H 'Content-Type: application/json' -d '{"name":"seen"}'
+curl -X POST http://localhost:8082/event -H 'Content-Type: application/json' -d '{"name":"not_seen"}'
+```
 
-#### Part 2: Distributed Application
+## CI
 
-- **Objective**: Apply the state machine model to an application scenario managing lights and gates at a railroad crossing.
-- **Details**:
-  - Implementation of the necessary functions to support the application's requirements.
-  - Description of the application using the state machine model.
-  - Creation of diagrams illustrating state transitions and interactions among components.
-- **Documentation**: Justification of design choices and discussion on the model's scalability, adaptability, and efficiency.
+Workflow: `.github/workflows/main.yml`
 
-#### Part 3: Runtime Environment
+- Build + tests + JaCoCo report
+- Docker image smoke build
 
-- **Objective**: Implement a distributed runtime environment in Java that can execute the application across at least three resources.
-- **Details**:
-  - The runtime should use orchestration tools like Docker Swarm, Nomad, or Consul to manage the distributed resources.
-  - The state machine behavior should be defined by the model and application description, not hardcoded.
-- **Documentation**: Comprehensive details on the implementation, orchestration environment, and instructions for deployment and execution.
+## Notes on Gradle Wrapper
 
-### Getting Started
-
-To get started with the project, follow these steps:
-
-1. **Clone the repository**:
-
-   ```bash
-   git clone https://github.com/yourusername/distributed-continuum-orchestrator.git
-   cd distributed-continuum-orchestrator
-   ```
-
-2. **Set up the development environment**:
-
-   - Ensure you have Java installed (version 11 or higher).
-   - Install Docker for container orchestration.
-   - (Optional) Set up an IDE like IntelliJ IDEA for easier development.
-
-3. **Build the project**:
-
-   ```bash
-   ./gradlew build
-   ```
-
-4. **Run the tests**:
-
-   ```bash
-   ./gradlew test
-   ```
-
-5. **Deploy the distributed application**:
-   - Follow the instructions in the `docs/deployment.md` file to deploy the application across multiple nodes using Docker.
-
-### Contribution Guidelines
-
-We welcome contributions to improve the DCO project. Please follow the guidelines below:
-
-- Fork the repository and create a new branch for your feature or bugfix.
-- Make sure to add appropriate tests and documentation.
-- Submit a pull request with a detailed description of your changes.
-
-### License
-
-This project is licensed under the MIT License - see the `LICENSE` file for details.
-
-### Contact
-
-If you have any questions or need further assistance, feel free to open an issue in the repository or contact the project maintainer at [fjordoneza@unal.edu.co].
+This repository includes a lightweight wrapper (`gradlew` / `gradlew.bat`) that downloads and uses Gradle `8.10.2`.
+You can replace it with the official Gradle Wrapper (`gradle wrapper`) if you prefer standard wrapper files.

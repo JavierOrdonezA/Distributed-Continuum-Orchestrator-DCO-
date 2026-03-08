@@ -1,95 +1,54 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
     branches:
       - main
-      - "feature/*"
+      - "feature/**"
+      - "codex/**"
   pull_request:
     branches:
       - main
 
 jobs:
-  code_formatting:
+  build_test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          java-version: "11"
-          distribution: "temurin"
+          distribution: temurin
+          java-version: "17"
 
-      - name: Apply code formatting
-        run: |
-          find . -name "*.java" -not -path "./.sandbox/*" -exec java -jar lib/google-java-format-1.23.0-all-deps.jar --replace {} \;
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
-  code_validation:
+      - name: Run build and tests
+        run: ./gradlew clean test jacocoTestReport
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: build/reports/tests/test
+
+      - name: Upload jacoco report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html
+
+  docker_smoke:
     runs-on: ubuntu-latest
-
+    needs: build_test
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: "11"
-          distribution: "temurin"
-
-      - name: Create lib directory
-        run: mkdir -p lib
-
-      - name: Download and Install Checkstyle
-        run: wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.10.0/checkstyle-10.10.0-all.jar -O lib/checkstyle.jar
-
-      - name: Validate code with Checkstyle
-        run: |
-          java -jar lib/checkstyle.jar -c ci/scripts/checkstyle.xml src/main/java/
-
-  run_linting:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: "11"
-          distribution: "temurin"
-
-      - name: Download and Install PMD
-        run: |
-          wget https://github.com/pmd/pmd/releases/download/pmd_releases/6.42.0/pmd-bin-6.42.0.zip -O pmd-bin.zip
-          mkdir -p lib/pmd-bin
-          unzip pmd-bin.zip -d lib/pmd-bin
-          chmod +x lib/pmd-bin/pmd-bin-6.42.0/bin/run.sh
-
-      - name: Run PMD Analysis
-        run: |
-          lib/pmd-bin/pmd-bin-6.42.0/bin/run.sh pmd -d src/main/java/ -R ci/scripts/pmd.xml -f text
-
-  tests:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Ensure gradlew is executable
-        run: chmod +x ./gradlew
-
-      - name: List root directory contents
-        run: ls -alh
-
-      - name: Build project and run tests
-        run: |
-          ./gradlew build
-          ./gradlew test
+      - name: Build docker image
+        run: docker build -t dco:ci .
